@@ -59,7 +59,11 @@ namespace WinLaunch
 
         public void InitGamepadInput()
         {
+            if (!Settings.CurrentSettings.GamepadActivation)
+                return;
+
             gamepadInputThread = new Thread(new ThreadStart(GamepadLoop));
+            gamepadInputThread.IsBackground = true;
 
             inputStates = new Dictionary<PlayerIndex, GamePadInputState>();
             inputStates[PlayerIndex.One] = new GamePadInputState();
@@ -70,12 +74,19 @@ namespace WinLaunch
 
         public void StartGamepadInput()
         {
+            if (gamepadInputThread == null)
+                return;
+
             gamepadInputThread.Start();
         }
 
         public void StopGamepadInput()
         {
+            if (gamepadInputThread == null)
+                return;
+
             gamepadInputThread.Abort();
+            gamepadInputThread = null;
         }
 
         private void ProcessInputForPlayer(PlayerIndex index)
@@ -153,14 +164,25 @@ namespace WinLaunch
 
         private void GamepadLoop()
         {
-            while (true)
+            try
             {
-                ProcessInputForPlayer(PlayerIndex.One);
-                ProcessInputForPlayer(PlayerIndex.Two);
-                ProcessInputForPlayer(PlayerIndex.Three);
-                ProcessInputForPlayer(PlayerIndex.Four);
+                while (true)
+                {
+                    ProcessInputForPlayer(PlayerIndex.One);
+                    ProcessInputForPlayer(PlayerIndex.Two);
+                    ProcessInputForPlayer(PlayerIndex.Three);
+                    ProcessInputForPlayer(PlayerIndex.Four);
 
-                Thread.Sleep(20);
+                    Thread.Sleep(20);
+                }
+            }
+            catch (DllNotFoundException ex)
+            {
+                CrashReporter.Report(ex);
+            }
+            catch (Exception ex)
+            {
+                CrashReporter.Report(ex);
             }
         }
 

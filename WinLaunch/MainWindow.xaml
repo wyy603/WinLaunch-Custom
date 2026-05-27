@@ -79,7 +79,7 @@
                             </Grid.RenderTransform>
 
                             <Grid.ContextMenu>
-                                <ContextMenu Width="200" Style="{StaticResource DarkContextMenu}">
+                                <ContextMenu Width="200" Opened="ItemContextMenu_Opened" Style="{StaticResource DarkContextMenu}">
                                     <MenuItem x:Name="miOpen"
                                         Click="miOpen_Click"
                                         Header="{my:Loc Open}">
@@ -929,7 +929,7 @@
                                     </Grid.ToolTip>
 
                                     <Grid.ContextMenu>
-                                        <ContextMenu Width="200" Style="{StaticResource DarkContextMenu}">
+                                        <ContextMenu Width="200" Opened="ItemContextMenu_Opened" Style="{StaticResource DarkContextMenu}">
                                             <MenuItem Click="miOpen_Click" Header="{my:Loc Open}">
                                                 <MenuItem.Icon>
                                                     <Image

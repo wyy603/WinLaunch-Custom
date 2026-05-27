@@ -17,6 +17,79 @@ namespace WinLaunch
     partial class MainWindow : Window
     {
         #region Context menu
+        private const string CustomContextMenuTag = "CustomContextMenuAction";
+
+        private void ItemContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu menu = sender as ContextMenu;
+            if (menu == null)
+                return;
+
+            RemoveCustomContextMenuItems(menu);
+
+            FrameworkElement target = menu.PlacementTarget as FrameworkElement;
+            SBItem item = target != null ? target.DataContext as SBItem : null;
+            if (item == null)
+                return;
+
+            bool addedSeparator = false;
+            foreach (CustomContextMenuAction action in CustomContextMenuAction.LoadActions())
+            {
+                if (!action.AppliesTo(item))
+                    continue;
+
+                if (!addedSeparator)
+                {
+                    Separator separator = new Separator();
+                    separator.Tag = CustomContextMenuTag;
+                    menu.Items.Add(separator);
+                    addedSeparator = true;
+                }
+
+                MenuItem menuItem = new MenuItem();
+                menuItem.Header = action.Title;
+                menuItem.Tag = CustomContextMenuTag;
+                menuItem.DataContext = item;
+                menuItem.Click += CustomContextMenuItem_Click;
+                menuItem.CommandParameter = action;
+                menu.Items.Add(menuItem);
+            }
+        }
+
+        private void RemoveCustomContextMenuItems(ContextMenu menu)
+        {
+            for (int i = menu.Items.Count - 1; i >= 0; i--)
+            {
+                FrameworkElement element = menu.Items[i] as FrameworkElement;
+                if (element != null && object.Equals(element.Tag, CustomContextMenuTag))
+                {
+                    MenuItem menuItem = element as MenuItem;
+                    if (menuItem != null)
+                        menuItem.Click -= CustomContextMenuItem_Click;
+
+                    menu.Items.RemoveAt(i);
+                }
+            }
+        }
+
+        private void CustomContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem == null)
+                return;
+
+            SBItem item = menuItem.DataContext as SBItem;
+            CustomContextMenuAction action = menuItem.CommandParameter as CustomContextMenuAction;
+            if (item == null || action == null)
+                return;
+
+            try
+            {
+                action.Execute(item);
+            }
+            catch { }
+        }
+
         private void miEdit_Click(object sender, RoutedEventArgs e)
         {
             SBItem Item = ((e.Source as MenuItem).DataContext as SBItem);

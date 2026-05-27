@@ -245,6 +245,7 @@
     <Compile Include="Assistant\Functions\system.cs" />
     <Compile Include="Assistant\Functions\utils.cs" />
     <Compile Include="Converters\Converters.cs" />
+    <Compile Include="CustomContextMenuAction.cs" />
     <Compile Include="Darkening.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

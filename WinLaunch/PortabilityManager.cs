@@ -77,6 +77,19 @@ namespace WinLaunch
             }
         }
 
+        public static string ContextMenuActionsPath
+        {
+            get
+            {
+                if (IsPortable)
+                {
+                    return Path.Combine(PortableDirectory, "ContextMenuActions.json");
+                }
+
+                return System.IO.Path.Combine(new string[] { Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WinLaunch", "ContextMenuActions.json" });
+            }
+        }
+
         public static bool IsPortable = false;
         public static string PortableDirectory = "Data";
 
