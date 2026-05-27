@@ -25,45 +25,57 @@ The JSON file must contain an array of action objects. This should work:
 
 ```json
 [
-  {
-    "title": "Show Target in Explorer",
-    "command": "explorer.exe",
-    "arguments": "/select,\"{targetPath}\""
-  }
+    {
+        "title": "Show Target in Explorer",
+        "command": "explorer.exe",
+        "arguments": "/select,\"{targetPath}\""
+    }
 ]
 ```
 
-Try these examples if you have corresponding apps:
+Try these examples if you have these apps:
 
 ```json
 [
-  {
-    "title": "Open with VS Code",
-    "command": "code",
-    "arguments": "\"{targetPath}\""
-  },
-  {
-    "title": "Open with WSL",
-    "command": "wt.exe",
-    "arguments": "-d \"{targetPath}\" wsl.exe",
-    "targetTypes": ["directory"]
-  },
-  {
-    "title": "Open with Windows Terminal",
-    "command": "wt.exe",
-    "arguments": "-d \"{targetPath}\"",
-    "targetTypes": ["directory"]
-  },
-  {
-    "title": "Open with Typora",
-    "command": "typora.exe",
-    "arguments": "\"{targetPath}\"",
-  },
-  {
-    "title": "Show Target in Explorer",
-    "command": "explorer.exe",
-    "arguments": "/select,\"{targetPath}\""
-  }
+    {
+        "title": "Open with VS Code",
+        "command": "code",
+        "arguments": "\"{targetPath}\""
+    },
+    {
+        "title": "Open with WSL",
+        "command": "wt.exe",
+        "arguments": "-d \"{targetPath}\" wsl.exe",
+        "targetTypes": ["directory"]
+    },
+    {
+        "title": "Open with Windows Terminal",
+        "command": "wt.exe",
+        "arguments": "-d \"{targetPath}\"",
+        "targetTypes": ["directory"]
+    },
+    {
+        "title": "Open with Typora",
+        "command": "typora.exe",
+        "arguments": "\"{targetPath}\"",
+    },
+    {
+        "title": "Show Target in Explorer",
+        "command": "explorer.exe",
+        "arguments": "/select,\"{targetPath}\""
+    }
+]
+```
+
+We use Windows `ShellExecute` API to execute the command with arguments. If you need complicated actions, please specify the executor and write suitable commands. e.g,
+
+```json
+[
+    {
+        "title": "Open a Windows Terminal in the folder and run VSCode",
+        "command": "powershell.exe",
+        "arguments": "-NoExit -Command \"Set-Location -LiteralPath '{targetPath}'; code .\""
+    }
 ]
 ```
 
@@ -106,10 +118,10 @@ Use this when an action only makes sense for Windows folders. For example:
 
 ```json
 {
-  "title": "Open with WSL",
-  "command": "wt.exe",
-  "arguments": "-d \"{targetPath}\" wsl.exe",
-  "targetTypes": ["directory"]
+    "title": "Open with WSL",
+    "command": "wt.exe",
+    "arguments": "-d \"{targetPath}\" wsl.exe",
+    "targetTypes": ["directory"]
 }
 ```
 
